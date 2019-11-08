@@ -15,33 +15,7 @@
 #include "keymap_german_ch.h"
 #include "keymap_jp.h"
 
-#define A_BSPC  LALT(KC_BSPC)
-#define A_LEFT  LALT(KC_LEFT)
-#define A_RGHT  LALT(KC_RGHT)
-#define C_TAB   LCTL(KC_TAB)
-#define GSL     LGUI(S(KC_LEFT))
-#define GSR     LGUI(S(KC_RGHT))
-#define G_TAB   LGUI(KC_TAB)
-#define G_GRV   LGUI(KC_GRV)
 #define SftEnt  SFT_T(KC_ENT)
-#define NAV     LT(2, KC_TAB)
-
-#define KC_MAC_UNDO LGUI(KC_Z)
-#define KC_MAC_CUT LGUI(KC_X)
-#define KC_MAC_COPY LGUI(KC_C)
-#define KC_MAC_PASTE LGUI(KC_V)
-#define KC_PC_UNDO LCTL(KC_Z)
-#define KC_PC_CUT LCTL(KC_X)
-#define KC_PC_COPY LCTL(KC_C)
-#define KC_PC_PASTE LCTL(KC_V)
-#define ES_LESS_MAC KC_GRAVE
-#define ES_GRTR_MAC LSFT(KC_GRAVE)
-#define ES_BSLS_MAC ALGR(KC_6)
-
-
-enum planck_keycodes {
-  RGB_SLD = EZ_SAFE_RANGE,
-};
 
 enum planck_layers {
   _QWERTY,
@@ -49,7 +23,6 @@ enum planck_layers {
   _RAISE,
   _ADJUST,
 };
-
 
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
@@ -83,10 +56,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
           ),
 
   [_LOWER] = LAYOUT_planck_grid(
-          KC_DELETE , KC_1    , KC_2    , KC_3    , KC_4     , KC_5    , KC_6     , KC_7     , KC_8                , KC_9              , KC_0            , _______             ,
-          _______   , KC_EXLM , KC_AT   , KC_HASH , KC_DLR   , KC_PERC , KC_CIRC  , KC_AMPR  , KC_ASTR             , KC_LPRN           , KC_RPRN         , KC_GRAVE            ,
-          _______   , KC_UNDO , KC_CUT  , KC_COPY , KC_PASTE , KC_FIND , KC_MINUS , KC_EQUAL , KC_LBRACKET         , KC_RBRACKET       , KC_BSLASH       , _______             ,
-          _______   , _______ , _______ , _______ , _______  , _______ , KC_NO    , _______  , KC_MEDIA_NEXT_TRACK , KC_AUDIO_VOL_DOWN , KC_AUDIO_VOL_UP , KC_MEDIA_PLAY_PAUSE
+          KC_DELETE , KC_1    , KC_2    , KC_3    , KC_4     , KC_5    , KC_6     , KC_7     , KC_8        , KC_9        , KC_0      , _______  ,
+          _______   , KC_EXLM , KC_AT   , KC_HASH , KC_DLR   , KC_PERC , KC_CIRC  , KC_AMPR  , KC_ASTR     , KC_LPRN     , KC_RPRN   , KC_GRAVE ,
+          _______   , KC_UNDO , KC_CUT  , KC_COPY , KC_PASTE , KC_FIND , KC_MINUS , KC_EQUAL , KC_LBRACKET , KC_RBRACKET , KC_BSLASH , _______  ,
+          _______   , _______ , _______ , _______ , _______  , _______ , KC_NO    , _______  , KC_LEFT     , KC_DOWN     , KC_UP     , KC_RIGHT
           )         ,
 
   [_RAISE] = LAYOUT_planck_grid(
@@ -127,17 +100,6 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [SFT_LCK] = ACTION_TAP_DANCE_FN_ADVANCED( caps_tap, NULL, caps_tap_end )
 };
 
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case RGB_SLD:
-      if (record->event.pressed) {
-        rgblight_mode(1);
-      }
-      return false;
-  }
-  return true;
-}
 
 #ifdef AUDIO_ENABLE
 bool muse_mode = false;
