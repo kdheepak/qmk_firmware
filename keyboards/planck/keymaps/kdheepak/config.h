@@ -1,10 +1,10 @@
 #pragma once
 
+#define TAPPING_TERM 200
+
 #ifdef AUDIO_ENABLE
 #define STARTUP_SONG SONG(PLANCK_SOUND)
 #endif
-
-#define TAPPING_TERM 200
 
 #define MIDI_BASIC
 
