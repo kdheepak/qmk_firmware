@@ -17,3 +17,8 @@
 
 #define COMBO_TERM 200
 #define COMBO_COUNT 1
+
+#define PLANCK_EZ_LED_LOWER 1
+#define PLANCK_EZ_LED_RAISE 2
+#define PLANCK_EZ_LED_ADJUST 3
+
