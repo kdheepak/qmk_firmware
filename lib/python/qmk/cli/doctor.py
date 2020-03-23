@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """QMK Doctor
 
 Check out the user's QMK environment and make sure it's ready to compile.
@@ -24,14 +25,17 @@ ESSENTIAL_BINARIES = {
     },
     'bin/qmk': {},
 }
-ESSENTIAL_SUBMODULES = ['lib/chibios', 'lib/lufa']
+ESSENTIAL_SUBMODULES = ["lib/chibios", "lib/lufa"]
 
 
 def _udev_rule(vid, pid=None):
     """ Helper function that return udev rules
     """
     if pid:
-        return 'SUBSYSTEMS=="usb", ATTRS{idVendor}=="%s", ATTRS{idProduct}=="%s", MODE:="0666"' % (vid, pid)
+        return (
+            'SUBSYSTEMS=="usb", ATTRS{idVendor}=="%s", ATTRS{idProduct}=="%s", MODE:="0666"'
+            % (vid, pid)
+        )
     else:
         return 'SUBSYSTEMS=="usb", ATTRS{idVendor}=="%s", MODE:="0666"' % vid
 
@@ -54,10 +58,12 @@ def check_avr_gcc_version():
 
         major, minor, rest = version_number.split('.', 2)
         if int(major) > 8:
-            cli.log.error('We do not recommend avr-gcc newer than 8. Downgrading to 8.x is recommended.')
+            cli.log.error(
+                "We do not recommend avr-gcc newer than 8. Downgrading to 8.x is recommended."
+            )
             return False
 
-        cli.log.info('Found avr-gcc version %s', version_number)
+        cli.log.info("Found avr-gcc version %s", version_number)
         return True
 
     return False
@@ -108,15 +114,17 @@ def check_submodules():
     ok = True
 
     for submodule in submodules.status().values():
-        if submodule['status'] is None:
-            if submodule['name'] in ESSENTIAL_SUBMODULES:
-                cli.log.error('Submodule %s has not yet been cloned!', submodule['name'])
+        if submodule["status"] is None:
+            if submodule["name"] in ESSENTIAL_SUBMODULES:
+                cli.log.error(
+                    "Submodule %s has not yet been cloned!", submodule["name"]
+                )
                 ok = False
             else:
-                cli.log.warn('Submodule %s is not available.', submodule['name'])
-        elif not submodule['status']:
-            if submodule['name'] in ESSENTIAL_SUBMODULES:
-                cli.log.warn('Submodule %s is not up to date!')
+                cli.log.warn("Submodule %s is not available.", submodule["name"])
+        elif not submodule["status"]:
+            if submodule["name"] in ESSENTIAL_SUBMODULES:
+                cli.log.warn("Submodule %s is not up to date!")
 
     return ok
 
@@ -127,11 +135,18 @@ def check_udev_rules():
     ok = True
     udev_dir = Path("/etc/udev/rules.d/")
     desired_rules = {
-        'dfu': {_udev_rule("03eb", "2ff4"), _udev_rule("03eb", "2ffb"), _udev_rule("03eb", "2ff0")},
-        'tmk': {_udev_rule("feed")},
-        'input_club': {_udev_rule("1c11")},
-        'stm32': {_udev_rule("1eaf", "0003"), _udev_rule("0483", "df11")},
-        'caterina': {'ATTRS{idVendor}=="2a03", ENV{ID_MM_DEVICE_IGNORE}="1"', 'ATTRS{idVendor}=="2341", ENV{ID_MM_DEVICE_IGNORE}="1"'},
+        "dfu": {
+            _udev_rule("03eb", "2ff4"),
+            _udev_rule("03eb", "2ffb"),
+            _udev_rule("03eb", "2ff0"),
+        },
+        "tmk": {_udev_rule("feed")},
+        "input_club": {_udev_rule("1c11")},
+        "stm32": {_udev_rule("1eaf", "0003"), _udev_rule("0483", "df11")},
+        "caterina": {
+            'ATTRS{idVendor}=="2a03", ENV{ID_MM_DEVICE_IGNORE}="1"',
+            'ATTRS{idVendor}=="2341", ENV{ID_MM_DEVICE_IGNORE}="1"',
+        },
     }
 
     if udev_dir.exists():
@@ -152,9 +167,14 @@ def check_udev_rules():
                 if bootloader == "caterina":
                     if check_modem_manager():
                         ok = False
-                        cli.log.warn("{bg_yellow}Detected ModemManager without udev rules. Please either disable it or set the appropriate udev rules if you are using a Pro Micro.")
+                        cli.log.warn(
+                            "{bg_yellow}Detected ModemManager without udev rules. Please either disable it or set the appropriate udev rules if you are using a Pro Micro."
+                        )
                 else:
-                    cli.log.warn("{bg_yellow}Missing udev rules for '%s' boards. You'll need to use `sudo` in order to flash them.", bootloader)
+                    cli.log.warn(
+                        "{bg_yellow}Missing udev rules for '%s' boards. You'll need to use `sudo` in order to flash them.",
+                        bootloader,
+                    )
 
     return ok
 
@@ -187,7 +207,7 @@ def is_executable(command):
     ESSENTIAL_BINARIES[command]['output'] = check.stdout
 
     if check.returncode in [0, 1]:  # Older versions of dfu-programmer exit 1
-        cli.log.debug('Found {fg_cyan}%s', command)
+        cli.log.debug("Found {fg_cyan}%s", command)
         return True
 
     cli.log.error("{fg_red}Can't run `%s %s`", command, version_arg)
@@ -222,9 +242,17 @@ def os_test_windows():
     return True
 
 
-@cli.argument('-y', '--yes', action='store_true', arg_only=True, help='Answer yes to all questions.')
-@cli.argument('-n', '--no', action='store_true', arg_only=True, help='Answer no to all questions.')
-@cli.subcommand('Basic QMK environment checks')
+@cli.argument(
+    "-y",
+    "--yes",
+    action="store_true",
+    arg_only=True,
+    help="Answer yes to all questions.",
+)
+@cli.argument(
+    "-n", "--no", action="store_true", arg_only=True, help="Answer no to all questions."
+)
+@cli.subcommand("Basic QMK environment checks")
 def doctor(cli):
     """Basic QMK environment checks.
 
@@ -233,7 +261,7 @@ def doctor(cli):
     TODO(unclaimed):
         * [ ] Compile a trivial program with each compiler
     """
-    cli.log.info('QMK Doctor is checking your environment.')
+    cli.log.info("QMK Doctor is checking your environment.")
     ok = True
 
     # Determine our OS and run platform specific tests
@@ -261,7 +289,7 @@ def doctor(cli):
             bin_ok = check_binaries()
 
     if bin_ok:
-        cli.log.info('All dependencies are installed.')
+        cli.log.info("All dependencies are installed.")
     else:
         ok = False
 
@@ -274,9 +302,9 @@ def doctor(cli):
     sub_ok = check_submodules()
 
     if sub_ok:
-        cli.log.info('Submodules are up to date.')
+        cli.log.info("Submodules are up to date.")
     else:
-        if yesno('Would you like to clone the submodules?', default=True):
+        if yesno("Would you like to clone the submodules?", default=True):
             submodules.update()
             sub_ok = check_submodules()
 
@@ -285,7 +313,9 @@ def doctor(cli):
 
     # Report a summary of our findings to the user
     if ok:
-        cli.log.info('{fg_green}QMK is ready to go')
+        cli.log.info("{fg_green}QMK is ready to go")
     else:
-        cli.log.info('{fg_yellow}Problems detected, please fix these problems before proceeding.')
+        cli.log.info(
+            "{fg_yellow}Problems detected, please fix these problems before proceeding."
+        )
         # FIXME(skullydazed/unclaimed): Link to a document about troubleshooting, or discord or something
