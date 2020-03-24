@@ -30,4 +30,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
    #define RGBLIGHT_EFFECT_RAINBOW_SWIRL
 #endif
 
+#undef TAPPING_TERM
+#define TAPPING_TERM 400
+#define PERMISSIVE_HOLD
+
+#define RETRO_TAPPING
+
 #endif /* CONFIG_USER_H */
